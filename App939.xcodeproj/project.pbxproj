@@ -683,7 +683,7 @@
 			);
 			currentVersion = 9937B6A92CBD3E5E00D665FD /* DataM.xcdatamodel */;
 			name = DataM.xcdatamodeld;
-			path = /Users/lucifer/Documents/SwiftProjects/App939/App939/LS/DataM.xcdatamodeld;
+			path = DataM.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
