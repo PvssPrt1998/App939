@@ -1,21 +1,16 @@
-//
-//  ContentView.swift
-//  App939
-//
-//  Created by Николай Щербаков on 14.10.2024.
-//
 
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var showSplash = true
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if showSplash {
+            Splash(show: $showSplash, dataController: ViewModelFactory.shared.dataController)
+        } else {
+            Tab()
         }
-        .padding()
     }
 }
 
