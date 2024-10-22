@@ -173,19 +173,58 @@ struct TrainingView: View {
                     .padding(.vertical, 24)
                     .padding(.top, 10)
                 
-                VStack(spacing: 16) {
-                    HStack(spacing: 16) {
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 16) {
+                        HStack(spacing: 16) {
+                            VStack(spacing: 12) {
+                                Text("SPEED (KM/H)")
+                                    .font(.system(size: 17, weight: .regular))
+                                    .foregroundColor(.white)
+                                TextField("", text: $viewModel.speed)
+                                    .font(.system(size: 50, weight: .regular))
+                                    .lineLimit(1)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .onChange(of: viewModel.speed, perform: { newValue in
+                                        speedValidation(newValue)
+                                    })
+                                    .keyboardType(.numberPad)
+                            }
+                            .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
+                            .frame(width: 170, height: 147)
+                            .background(Color.white.opacity(0.05))
+                            .clipShape(.rect(cornerRadius: 24))
+                            VStack(spacing: 12) {
+                                Text("DISTANCE (KM)")
+                                    .font(.system(size: 17, weight: .regular))
+                                    .foregroundColor(.white)
+                                TextField("", text: $viewModel.distance)
+                                    .font(.system(size: 50, weight: .regular))
+                                    .lineLimit(1)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .onChange(of: viewModel.distance, perform: { newValue in
+                                        distanceValidation(newValue)
+                                    })
+                                    .keyboardType(.numberPad)
+                            }
+                            .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
+                            .frame(width: 170, height: 147)
+                            .background(Color.white.opacity(0.05))
+                            .clipShape(.rect(cornerRadius: 24))
+                        }
                         VStack(spacing: 12) {
-                            Text("SPEED (KM/H)")
+                            Text("TIME (MIN)")
                                 .font(.system(size: 17, weight: .regular))
                                 .foregroundColor(.white)
-                            TextField("", text: $viewModel.speed)
+                            TextField("", text: $viewModel.time)
                                 .font(.system(size: 50, weight: .regular))
                                 .lineLimit(1)
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
-                                .onChange(of: viewModel.speed, perform: { newValue in
-                                    speedValidation(newValue)
+                                .onChange(of: viewModel.time, perform: { newValue in
+                                    timeValidation(newValue)
                                 })
                                 .keyboardType(.numberPad)
                         }
@@ -193,59 +232,23 @@ struct TrainingView: View {
                         .frame(width: 170, height: 147)
                         .background(Color.white.opacity(0.05))
                         .clipShape(.rect(cornerRadius: 24))
-                        VStack(spacing: 12) {
-                            Text("DISTANCE (KM)")
-                                .font(.system(size: 17, weight: .regular))
-                                .foregroundColor(.white)
-                            TextField("", text: $viewModel.distance)
-                                .font(.system(size: 50, weight: .regular))
-                                .lineLimit(1)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .onChange(of: viewModel.distance, perform: { newValue in
-                                    distanceValidation(newValue)
-                                })
-                                .keyboardType(.numberPad)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Button {
+                            viewModel.setupTimer()
+                            showTraining = true
+                            showTrainingSetting = false
+                        } label: {
+                            Text("GO")
+                                .font(.body)
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity,maxHeight: .infinity)
+                                .frame(height: 50)
+                                .background(viewModel.goButtonDisabled ? Color.c2442482551.opacity(0.12) : Color.primaryYellow)
+                                .clipShape(.rect(cornerRadius: 10))
                         }
-                        .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
-                        .frame(width: 170, height: 147)
-                        .background(Color.white.opacity(0.05))
-                        .clipShape(.rect(cornerRadius: 24))
+                        .disabled(viewModel.goButtonDisabled)
                     }
-                    VStack(spacing: 12) {
-                        Text("TIME (MIN)")
-                            .font(.system(size: 17, weight: .regular))
-                            .foregroundColor(.white)
-                        TextField("", text: $viewModel.time)
-                            .font(.system(size: 50, weight: .regular))
-                            .lineLimit(1)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .onChange(of: viewModel.time, perform: { newValue in
-                                timeValidation(newValue)
-                            })
-                            .keyboardType(.numberPad)
-                    }
-                    .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
-                    .frame(width: 170, height: 147)
-                    .background(Color.white.opacity(0.05))
-                    .clipShape(.rect(cornerRadius: 24))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Button {
-                        viewModel.setupTimer()
-                        showTraining = true
-                        showTrainingSetting = false
-                    } label: {
-                        Text("GO")
-                            .font(.body)
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity,maxHeight: .infinity)
-                            .frame(height: 50)
-                            .background(viewModel.goButtonDisabled ? Color.c2442482551.opacity(0.12) : Color.primaryYellow)
-                            .clipShape(.rect(cornerRadius: 10))
-                    }
-                    .disabled(viewModel.goButtonDisabled)
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
@@ -421,73 +424,75 @@ struct TrainingView: View {
     private var training: some View {
         ZStack {
             Color.bgMain.ignoresSafeArea()
-            VStack(spacing: 0) {
-                ZStack {
-                    Circle()
-                        .trim(from: 0, to: 1)
-                        .stroke(Color.white.opacity(0.2), style: StrokeStyle(lineWidth: 18, lineCap: .round))
-                    Circle()
-                        .trim(from: 0, to: viewModel.trimValue)
-                        .stroke(Color.primaryYellow, style: StrokeStyle(lineWidth: 18, lineCap: .round))
-                        .rotationEffect(.degrees(-90))
-                    
-                    Image("ponyIcon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 75, height: 75)
-                    
-                    Image(systemName: viewModel.isTrainingActive ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.white)
-                        .frame(height: 40)
-                        .onTapGesture {
-                            if !viewModel.isTrainingActive {
-                                withAnimation {
-                                    viewModel.isTrainingActive = true
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0) {
+                    ZStack {
+                        Circle()
+                            .trim(from: 0, to: 1)
+                            .stroke(Color.white.opacity(0.2), style: StrokeStyle(lineWidth: 18, lineCap: .round))
+                        Circle()
+                            .trim(from: 0, to: viewModel.trimValue)
+                            .stroke(Color.primaryYellow, style: StrokeStyle(lineWidth: 18, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                        
+                        Image("ponyIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 75, height: 75)
+                        
+                        Image(systemName: viewModel.isTrainingActive ? "pause.fill" : "play.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(height: 40)
+                            .onTapGesture {
+                                if !viewModel.isTrainingActive {
+                                    withAnimation {
+                                        viewModel.isTrainingActive = true
+                                    }
                                 }
                             }
-                        }
+                    }
+                    .frame(width: 183, height: 183)
+                    
+                    (
+                        Text(viewModel.hoursLeft) +
+                        Text(":" + viewModel.minutesLeft) +
+                        Text(":" + viewModel.secondsLeft)
+                    )
+                    .font(.largeTitle.bold())
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                    .padding(.top, 16)
+                    
+                    if viewModel.isTrainingActive {
+                        swipeField
+                    } else {
+                        swipeField.hidden()
+                    }
+                    
+                    trainingDetails
+                        .padding(.top, 32)
+                    Button {
+                        viewModel.stopButtonPressed()
+                    } label: {
+                        Text("STOP")
+                            .font(.body)
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(height: 50)
+                            .background(viewModel.isTrainingActive ? Color.c2442482551.opacity(0.12) : Color.primaryYellow)
+                            .clipShape(.rect(cornerRadius: 10))
+                    }
+                    .disabled(viewModel.isTrainingActive)
+                    .padding(.top, 16)
                 }
-                .frame(width: 183, height: 183)
-                
-                (
-                    Text(viewModel.hoursLeft) +
-                    Text(":" + viewModel.minutesLeft) +
-                    Text(":" + viewModel.secondsLeft)
-                )
-                .font(.largeTitle.bold())
-                .foregroundColor(.white)
-                .padding(.vertical, 10)
-                .padding(.top, 16)
-                
-                if viewModel.isTrainingActive {
-                    swipeField
-                } else {
-                    swipeField.hidden()
-                }
-                
-                trainingDetails
-                    .padding(.top, 32)
-                Button {
-                    viewModel.stopButtonPressed()
-                } label: {
-                    Text("STOP")
-                        .font(.body)
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .frame(height: 50)
-                        .background(viewModel.isTrainingActive ? Color.c2442482551.opacity(0.12) : Color.primaryYellow)
-                        .clipShape(.rect(cornerRadius: 10))
-                }
-                .disabled(viewModel.isTrainingActive)
-                .padding(.top, 16)
+                .onReceive(viewModel.timer, perform: { _ in
+                    viewModel.decreaseTimer()
+                })
+                .padding(EdgeInsets(top: 61, leading: 16, bottom: 84, trailing: 16))
+                .frame(maxHeight: .infinity, alignment: .top)
             }
-            .onReceive(viewModel.timer, perform: { _ in
-                viewModel.decreaseTimer()
-            })
-            .padding(EdgeInsets(top: 61, leading: 16, bottom: 0, trailing: 16))
-            .frame(maxHeight: .infinity, alignment: .top)
         }
     }
     private var trainingEnd: some View {
@@ -536,7 +541,9 @@ struct TrainingView: View {
                     .scaledToFit()
                     .frame(maxWidth: 241, maxHeight: 241)
                     .padding(.top, 65)
+                    .padding(.bottom, 84)
             }
+            .padding(.horizontal, 15)
             .frame(maxHeight: .infinity, alignment: .top)
         }
     }
@@ -712,9 +719,9 @@ final class TrainingViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate
     
     @Published var dailyTrainingTime: Int = 30
     
-    @Published var speed: String = "1"
-    @Published var distance: String = "1"
-    @Published var time: String = "1"
+    @Published var speed: String = "0"
+    @Published var distance: String = "0"
+    @Published var time: String = "0"
     
     @Published var trainings: Array<Training> = []
     
