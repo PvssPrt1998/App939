@@ -7,6 +7,9 @@ import SwiftUI
 final class ViewModelFactory {
     static let shared = ViewModelFactory()
     
+    var wweanw = false
+    @AppStorage("ponyDetailLine") var ponyDetailLine = ""
+    
     let dataController: DataController
     
     private var homeViewModel: HomeViewModel?

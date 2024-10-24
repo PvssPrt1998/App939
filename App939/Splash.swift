@@ -2,6 +2,7 @@ import SwiftUI
 
 struct Splash: View {
     
+    @State var isPortrait = UIDevice.current.orientation.isPortrait
     @Binding var show: Bool
     
     @State var rotationValue: CGFloat = 0
@@ -12,21 +13,24 @@ struct Splash: View {
             Image("LoadingBackground")
                 .resizable()
                 .ignoresSafeArea()
-            Color.black
-                .opacity(0.4)
-                .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                Spacer()
-                Text("Create a detailed record of your pony's exercises")
-                    .font(.largeTitle.bold())
-                    .foregroundColor(.white)
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
-                Spacer()
+                Image("Logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 191)
+                    .padding(.top, 64)
+                (
+                    Text("Create your own\n")
+                        .font(.largeTitle.bold())
+                        .foregroundColor(.white)
+                    + Text("path to victory")
+                        .font(.largeTitle.bold())
+                        .foregroundColor(.primaryYellow)
+                )
+                .padding(.top, 10)
             }
+            .frame(maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 15)
             
             VStack(spacing: 0) {
@@ -54,6 +58,12 @@ struct Splash: View {
                         .frame(height: 122)
                         .rotationEffect(.degrees(rotationValue))
                 }
+                .padding(.leading, isPortrait ? 0 : UIScreen.main.bounds.width * 0.6)
+                .frame(maxWidth: .infinity)
+                .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                                guard let scene = UIApplication.shared.windows.first?.windowScene else { return }
+                                self.isPortrait = scene.interfaceOrientation.isPortrait
+                            }
                 Spacer()
             }
             

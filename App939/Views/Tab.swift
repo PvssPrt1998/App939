@@ -19,6 +19,9 @@ struct Tab: View {
             }
             tabBar
         }
+        .onAppear {
+            AppDelegate.orientationLock = .portrait
+        }
     }
     
     private var tabBar: some View {

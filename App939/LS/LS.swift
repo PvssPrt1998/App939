@@ -200,4 +200,35 @@ final class LS {
         coreDataStack.managedContext.delete(articleCD)
         coreDataStack.saveContext()
     }
+    
+    func editDailyShow(_ select: Bool) {
+        do {
+            let ids = try coreDataStack.managedContext.fetch(DailyTimeShow.fetchRequest())
+            if ids.count > 0 {
+                //exists
+                ids[0].show = select
+            } else {
+                let alwaysSelect = DailyTimeShow(context: coreDataStack.managedContext)
+                alwaysSelect.show = select
+            }
+            coreDataStack.saveContext()
+        } catch let error as NSError {
+            print("Unresolved error \(error), \(error.userInfo)")
+        }
+    }
+    
+    func fetchDailyTimeShow() throws -> Bool? {
+        guard let totalNumber = try coreDataStack.managedContext.fetch(DailyTimeShow.fetchRequest()).first else { return nil }
+        return totalNumber.show
+    }
+    
+    func fetchNewPony() throws -> String? {
+        guard let totalNumber = try coreDataStack.managedContext.fetch(NewPonyName.fetchRequest()).first else { return nil }
+        return totalNumber.name
+    }
+    
+    func createGameSettingsObject() {
+        let settingsObject = NewPonyName(context: coreDataStack.managedContext)
+        coreDataStack.saveContext()
+    }
 }

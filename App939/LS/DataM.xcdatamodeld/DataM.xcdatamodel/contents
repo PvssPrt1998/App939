@@ -11,8 +11,14 @@
         <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="DailyTimeShow" representedClassName=".DailyTimeShow" syncable="YES">
+        <attribute name="show" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+    </entity>
     <entity name="DailyTrainingTime" representedClassName=".DailyTrainingTime" syncable="YES">
         <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="NewPonyName" representedClassName=".NewPonyName" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="name0age1breed2owner3customer4country5"/>
     </entity>
     <entity name="PonyCD" representedClassName=".PonyCD" syncable="YES">
         <attribute name="age" optional="YES" attributeType="String"/>
