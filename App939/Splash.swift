@@ -4,7 +4,6 @@ struct Splash: View {
     
     @State var isPortrait = UIDevice.current.orientation.isPortrait
     @Binding var show: Bool
-    
     @State var rotationValue: CGFloat = 0
     let dataController: DataController
     
