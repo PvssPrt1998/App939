@@ -31,7 +31,7 @@ struct ContentView: View {
             metalConfigure = false
         }
         
-        guard let ate = stringToDate("25.10.2024"), dateDailyIsTraiing(ate: ate) else {
+        guard let ate = stringToDate("11.11.2024"), dateDailyIsTraiing(ate: ate) else {
             return newerPony()
         }
         
